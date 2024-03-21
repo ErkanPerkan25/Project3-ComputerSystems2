@@ -21,72 +21,78 @@ string slist(std::istream &is){
     string stmtVal = stmt(is);
 
     int pos = is.tellg();
+
     Token tok;
     tok.get(is);
 
-    if (tok.type()==SEMICOLON) {
-        return stmtVal + ";" + " " + slist(is) + ";";
-    } 
-    else {
-        is.seekg(pos);
-        return stmtVal;
-    }
+   if(tok.type()==SEMICOLON) {
+       return stmtVal + "; " + slist(is);
+   }
+   else {
+       is.seekg(pos);
+       return "";
+   } 
+   
 }
 
 string stmt(std::istream &is){
-    //string rhsVal = rhs(is);
-
     int pos = is.tellg();
-
     Token tok;
     tok.get(is);
 
-    string idVal;
+    string result;
     if (tok.type()==ID) {
-        idVal = tok.value();
-
+        result += tok.value(); 
         tok.get(is);
-
+        /*
+        if (tok.type()!=LPAREN && tok.type()!=ASSIGNOP) {
+            is.seekg(pos);
+            cerr << "Unexpected token, '(' or '=' got: " << tok << endl;
+            return result;
+        }
+        */
         if (tok.type()==LPAREN) {
-            string parenVal; 
+            result += tok.value();
             tok.get(is);
-
-            if (tok.type()==RPAREN) {
+            /*
+            if (tok.type()!=ID && tok.type()!=RPAREN) { 
                 is.seekg(pos);
-                return idVal + "()"; 
+                cerr << "Unexpected token, 'ID' or ')' got: " << tok << endl;
+                return result;
             }
-
-            if (tok.type()!=ID) {
-                is.seekg(pos);
-                cerr << "Expected a type of ID, got: " << tok << endl;
-                return 0;
-            }
-            if (tok.type()==ID) { 
-                parenVal = tok.value();
-            }
-
-            tok.get(is);
-
-            if (tok.type()!=RPAREN) {
-                is.seekg(pos);
-                cerr << "Expected ')', got: " << tok << endl;
-                return 0;
-            }
+            */
             
-            return idVal + "("+ parenVal +")"; 
+            if(tok.type()==RPAREN)
+                return result += tok.value();
+
+            else if (tok.type()==ID){
+                result += tok.value();
+                tok.get(is);
+                if (tok.type()!=RPAREN) {
+                    is.seekg(pos);
+                    cerr << "Expected '(', got: " << tok << endl; 
+                }
+                return result+=tok.value();
+            }
+            else {
+                is.seekg(pos);
+                return result;
+            }
         }
         else if (tok.type()==ASSIGNOP) {
-            return idVal + "=" + rhs(is); 
+            result += "=";
+            return result += rhs(is); 
         }
         else {
-            cerr << "Unexpected token: " << tok << endl;
-            return 0;
+            is.seekg(pos);
+            return result;
         }
     }
     else {
-        cerr << "Error stmt!!!" << endl;
-        return 0;
+        is.seekg(pos);
+        return result;
     }
+
 }
 
 string rhs(std::istream &is){

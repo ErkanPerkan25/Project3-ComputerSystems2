@@ -162,7 +162,7 @@ void Token::get(istream &is)
         _type = EOF_TOK;
 
     // Skips white spacing and comments
-    while (isspace(ch) || ch == '#' || comment == true) {
+    while (isspace(ch) || ch == '#' || comment == true ) {
         if(ch=='\n'){ // increments the number if line when there is also a blank line
             _line_num++;
             comment = false;
