@@ -1,8 +1,11 @@
 /*******************************************
  * File: main.cpp                          *
  * Author: Eric Hansson                    *
- * Date:                            *
- * PURPOSE:       *
+ * Date: 3/26/2024                      
+ * PURPOSE: Purpose is to read in a file
+ * and execute the code of it. Focusing on
+ * freeList, memory allocation, freeing 
+ * memory, compressing, and garbage collection
  *******************************************/
 #include <iostream>
 #include <fstream>
@@ -13,11 +16,16 @@
 
 using namespace std;
 
+// A list of block pointers 
+list<Block*> block_list;
+
 int main(int argc, char *argv[])
 {
+    // Varibale to keep track of the size and input file name
     int heap_size;
     string input_file;
 
+    // Prompts
     cout << "Please enter the initial freelist (heap) size: ";
     cin >> heap_size;
 
@@ -32,16 +40,13 @@ int main(int argc, char *argv[])
     cerr << "ERROR: Could not open file:\"" << input_file << "\"" <<endl;
     return -1;
     }
-
-    list<Block*> block_list;
-    Block* freeList = new Block("freeList", 0, heap_size, 0);
+   
+    // Creates a freelist block, and pushes it to the list
+    Block* freeList = new Block(0,heap_size);
     block_list.push_back(freeList);
-    
-    cout << "Free List: " << endl;
-    cout << freeList->address() << "(" << freeList->size() << ")" << "[" << freeList->ref_count() << "]" << endl;
-    cout << "==================================================================================================" << endl;
 
-    //cout << program(ifile) << endl;
+    // Reads the input file and executes accordingly
+    program(ifile);
 
   return 0;
 }

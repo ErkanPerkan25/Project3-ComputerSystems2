@@ -1,1 +1,13 @@
-dump();
+c = alloc(34); dump();
+c = alloc(17); dump();
+b = alloc(57); dump();
+a = alloc(3); dump();
+d=a; dump();
+free(a); dump();
+free(b); dump();
+free(c); dump();
+d=d; dump();
+hello=alloc(52); dump();
+compress(); dump(); free(d); compress(); dump();
+goodbye=hello; bonjour=hello;
+hola=bonjour; privet=hola; dump();
